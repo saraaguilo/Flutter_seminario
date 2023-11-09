@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -22,11 +24,25 @@ class _UserListPageState extends State<UserListPage> {
     http.Response response = await http.get(url);
     data = json.decode(response.body);
     setState(() {
-      usersData.addAll(data['docs']); 
+      usersData.addAll(data['docs']);
+      print(usersData); 
       currentPage = data['page'];
       totalPages = data['totalPages'];
       isLoading = false;
     });
+  }
+
+  deleteById(String id) async{
+    print("delete by Id $id");
+    Uri url = Uri.parse('http://localhost:9090/users/deleteuser/$id');
+    http.Response response = await http.delete(url);
+    if(response.statusCode == 201){
+      setState(() {
+        usersData.removeWhere((user) => user['_id'] == id);
+      }); 
+    } else {
+      print('Error');
+    }
   }
 
   @override
@@ -74,6 +90,8 @@ class _UserListPageState extends State<UserListPage> {
               controller: _scrollController,
               itemCount: usersData.length + (isLoading ? 1 : 0), 
               itemBuilder: (BuildContext context, int index) {
+                final item = usersData[index] as Map;
+                final id = item['_id'] as String;
                 if (index == usersData.length) {
                   if (isLoading) {
                     return CircularProgressIndicator(); 
@@ -114,6 +132,24 @@ class _UserListPageState extends State<UserListPage> {
                             color: Color(0xFFFFFCEA),
                           ),
                         ),
+                        PopupMenuButton(
+                          onSelected: (value){
+                            if(value == 'edit'){
+
+                            }else if(value == 'delete'){
+                              deleteById(id);
+                            }
+                          },
+                          itemBuilder: (context){
+                          return [
+                            PopupMenuItem(child: Text('Edit'),
+                            value: 'edit',
+                            ),
+                            PopupMenuItem(child: Text('Delete'),
+                            value: 'delete',
+                            ),
+                          ];
+                        }),
                       ],
                     ),
                   ),
