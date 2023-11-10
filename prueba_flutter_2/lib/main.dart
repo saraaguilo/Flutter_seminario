@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:prueba_flutter_2/edit_user_page.dart';
 import 'profile_page.dart';
 import 'home_page.dart';
 import 'create_user_page.dart';
 import 'user_list_page.dart';
 
-
-
 void main() {
   runApp(MyApp());
 }
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -17,8 +15,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0; 
-
+  int _selectedIndex = 0;
 
   final List<Widget> _pages = [
     HomePage(),
@@ -29,7 +26,7 @@ class _MyAppState extends State<MyApp> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index; 
+      _selectedIndex = index;
     });
   }
 
@@ -37,10 +34,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: _pages[_selectedIndex], 
+        body: _pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Color.fromARGB(255, 183, 181, 181),
-          backgroundColor:Color(0xFF486D28),
+          backgroundColor: Color(0xFF486D28),
           selectedItemColor: Color(0xFFFFFCEA),
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -56,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               label: 'Profile',
             ),
           ],
-          currentIndex: _selectedIndex, 
+          currentIndex: _selectedIndex,
           onTap: _onItemTapped,
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'create_user_page.dart';
+import 'edit_user_page.dart';
 
 class UserListPage extends StatefulWidget {
   @override
@@ -25,21 +26,21 @@ class _UserListPageState extends State<UserListPage> {
     data = json.decode(response.body);
     setState(() {
       usersData.addAll(data['docs']);
-      print(usersData); 
+      print(usersData);
       currentPage = data['page'];
       totalPages = data['totalPages'];
       isLoading = false;
     });
   }
 
-  deleteById(String id) async{
+  deleteById(String id) async {
     print("delete by Id $id");
     Uri url = Uri.parse('http://localhost:9090/users/deleteuser/$id');
     http.Response response = await http.delete(url);
-    if(response.statusCode == 201){
+    if (response.statusCode == 201) {
       setState(() {
         usersData.removeWhere((user) => user['_id'] == id);
-      }); 
+      });
     } else {
       print('Error');
     }
@@ -51,7 +52,8 @@ class _UserListPageState extends State<UserListPage> {
     getUsers(currentPage);
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         if (currentPage < totalPages) {
           loadPage();
         }
@@ -67,6 +69,13 @@ class _UserListPageState extends State<UserListPage> {
 
       getUsers(currentPage + 1);
     }
+  }
+
+  void navigateToEditPage(String id) {
+    final route = MaterialPageRoute(
+      builder: (context) => EditUserPage(id),
+    );
+    Navigator.push(context, route);
   }
 
   @override
@@ -88,13 +97,13 @@ class _UserListPageState extends State<UserListPage> {
           Expanded(
             child: ListView.builder(
               controller: _scrollController,
-              itemCount: usersData.length + (isLoading ? 1 : 0), 
+              itemCount: usersData.length + (isLoading ? 1 : 0),
               itemBuilder: (BuildContext context, int index) {
                 final item = usersData[index] as Map;
                 final id = item['_id'] as String;
                 if (index == usersData.length) {
                   if (isLoading) {
-                    return CircularProgressIndicator(); 
+                    return CircularProgressIndicator();
                   } else {
                     loadPage();
                     return SizedBox();
@@ -119,7 +128,8 @@ class _UserListPageState extends State<UserListPage> {
                           ),
                         ),
                         CircleAvatar(
-                          backgroundImage: NetworkImage(usersData[userIndex]['avatar']),
+                          backgroundImage:
+                              NetworkImage(usersData[userIndex]['avatar']),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -132,21 +142,21 @@ class _UserListPageState extends State<UserListPage> {
                             color: Color(0xFFFFFCEA),
                           ),
                         ),
-                        PopupMenuButton(
-                          onSelected: (value){
-                            if(value == 'edit'){
-
-                            }else if(value == 'delete'){
-                              deleteById(id);
-                            }
-                          },
-                          itemBuilder: (context){
+                        PopupMenuButton(onSelected: (value) {
+                          if (value == 'edit') {
+                            navigateToEditPage(id);
+                          } else if (value == 'delete') {
+                            deleteById(id);
+                          }
+                        }, itemBuilder: (context) {
                           return [
-                            PopupMenuItem(child: Text('Edit'),
-                            value: 'edit',
+                            PopupMenuItem(
+                              child: Text('Edit'),
+                              value: 'edit',
                             ),
-                            PopupMenuItem(child: Text('Delete'),
-                            value: 'delete',
+                            PopupMenuItem(
+                              child: Text('Delete'),
+                              value: 'delete',
                             ),
                           ];
                         }),
@@ -173,6 +183,7 @@ class _UserListPageState extends State<UserListPage> {
     );
   }
 }
+
 void main() {
   runApp(MaterialApp(
     home: UserListPage(),
