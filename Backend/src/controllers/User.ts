@@ -35,7 +35,7 @@ const readAll = (req: Request, res: Response, next: NextFunction) => {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 1; 
     const options: PaginationOptions = {
         page,
-        limit: 3
+        limit: 10
     };
     return User.paginate(options)
         .then((result) => res.status(200).json(result))
