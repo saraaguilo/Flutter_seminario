@@ -4,6 +4,7 @@ import 'profile_page.dart';
 import 'home_page.dart';
 import 'create_user_page.dart';
 import 'user_list_page.dart';
+import 'nuevapantalla.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,7 +22,9 @@ class _MyAppState extends State<MyApp> {
     HomePage(),
     UserListPage(),
     ProfilePage(),
-    CreateUserPage()
+    NuevaPantalla(),
+    CreateUserPage(),
+    
   ];
 
   void _onItemTapped(int index) {
@@ -51,6 +54,10 @@ class _MyAppState extends State<MyApp> {
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Nueva',
             ),
           ],
           currentIndex: _selectedIndex,
